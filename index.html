@@ -44,6 +44,26 @@
         <p class="loader-text">Printing your experience...</p>
       </div>
     </div>
+    <!-- Failsafe: hide loader if main bundle fails to load -->
+    <script>
+      (function(){
+        // If the app bundle doesn't run, hide the loader after 3.5s
+        setTimeout(function(){
+          var loader = document.getElementById('loader');
+          if (loader && loader.style.display !== 'none') {
+            loader.style.display = 'none';
+            loader.style.opacity = '0';
+            loader.classList.add('hidden');
+          }
+          var app = document.getElementById('app');
+          if (app) {
+            app.style.opacity = '1';
+            app.style.visibility = 'visible';
+            app.style.zIndex = '1';
+          }
+        }, 3500);
+      })();
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

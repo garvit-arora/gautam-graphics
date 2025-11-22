@@ -81,7 +81,28 @@ export class Cart {
                 <span>Total</span>
                 <span>₹${total + 99}</span>
               </div>
-              <button class="btn-primary btn-large btn-full" id="checkout-btn">Proceed to Checkout</button>
+              <form id="cart-enquiry-form" action="https://formspree.io/f/mjkzrdno" method="POST" class="enquiry-form">
+                <div class="form-group">
+                  <label for="enquiry-name">Name</label>
+                  <input type="text" id="enquiry-name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="enquiry-email">Email</label>
+                  <input type="email" id="enquiry-email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="enquiry-phone">Phone</label>
+                  <input type="tel" id="enquiry-phone" name="phone">
+                </div>
+                <div class="form-group">
+                  <label for="cart-enquiry-message">Message</label>
+                  <textarea id="cart-enquiry-message" name="message" rows="4" placeholder="Tell us about any special requirements" required></textarea>
+                </div>
+                <input type="hidden" name="cart_total" id="cart-total-hidden" value="${total + 99}">
+                <input type="hidden" name="cart_items" id="cart-items-hidden">
+                <input type="hidden" name="_subject" value="New Cart Enquiry - Gautam Graphics">
+                <button type="submit" class="btn-primary btn-large btn-full">Send Enquiry</button>
+              </form>
               <a href="/" class="btn-secondary btn-full" data-link>Continue Shopping</a>
             </div>
           </div>
@@ -98,11 +119,34 @@ export class Cart {
       })
     })
 
-    const checkoutBtn = main.querySelector('#checkout-btn')
-    if (checkoutBtn) {
-      checkoutBtn.addEventListener('click', () => {
-        alert('Checkout functionality will be integrated with payment gateway')
-      })
+    const enquiryForm = main.querySelector('#cart-enquiry-form')
+    if (enquiryForm) {
+      // Prefill message and hidden items summary
+      const itemsHidden = enquiryForm.querySelector('#cart-items-hidden')
+      const messageField = enquiryForm.querySelector('#cart-enquiry-message')
+      const totalHidden = enquiryForm.querySelector('#cart-total-hidden')
+      if (itemsHidden) {
+        try {
+          itemsHidden.value = JSON.stringify(this.cart)
+        } catch (_) {
+          itemsHidden.value = this.cart.map(i => `${i.name} x${i.quantity} - ${i.price}`).join(', ')
+        }
+      }
+      if (messageField) {
+        const subtotal = this.cart.reduce((sum, item) => sum + (parseInt(item.price.replace('₹', '')) * item.quantity), 0)
+        const summary = [
+          'Order enquiry from cart:',
+          ...this.cart.map(i => `• ${i.name} x${i.quantity} (${i.category}) - ${i.price}`),
+          `Subtotal: ₹${subtotal}`,
+          'Shipping: ₹99',
+          `Total: ₹${subtotal + 99}`
+        ].join('\n')
+        messageField.value = summary
+      }
+      if (totalHidden) {
+        const subtotal = this.cart.reduce((sum, item) => sum + (parseInt(item.price.replace('₹', '')) * item.quantity), 0)
+        totalHidden.value = String(subtotal + 99)
+      }
     }
 
     container.appendChild(main)

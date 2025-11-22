@@ -55,6 +55,71 @@ export class Store {
         price: '₹1299',
         image: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=500',
         description: 'Large format banner printing'
+      },
+      // New items
+      {
+        id: 'business-cards',
+        name: 'Business Cards',
+        category: 'Stationery',
+        price: '₹249',
+        image: 'https://picsum.photos/seed/businesscards/500/300',
+        description: 'Premium matte or glossy visiting cards with custom designs'
+      },
+      {
+        id: 'brochure-printing',
+        name: 'Brochure Printing',
+        category: 'Marketing',
+        price: '₹699',
+        image: 'https://picsum.photos/seed/brochures/500/300',
+        description: 'Tri-fold and bi-fold brochures with high-quality finishes'
+      },
+      {
+        id: 'sticker-printing',
+        name: 'Sticker Printing',
+        category: 'Stickers',
+        price: '₹199',
+        image: 'https://picsum.photos/seed/stickers/500/300',
+        description: 'Custom vinyl stickers, labels, and decals'
+      },
+      {
+        id: 'id-card-printing',
+        name: 'ID Card Printing',
+        category: 'Identity',
+        price: '₹349',
+        image: 'https://picsum.photos/seed/idcards/500/300',
+        description: 'PVC ID cards with lanyards and custom branding'
+      },
+      {
+        id: 'diaries-notebooks',
+        name: 'Diaries & Notebooks',
+        category: 'Stationery',
+        price: '₹499',
+        image: 'https://picsum.photos/seed/diaries/500/300',
+        description: 'Branded diaries and notebooks for corporate gifting'
+      },
+      {
+        id: 'keychain-printing',
+        name: 'Keychain Printing',
+        category: 'Accessories',
+        price: '₹149',
+        image: 'https://picsum.photos/seed/keychains/500/300',
+        description: 'Custom photo and logo keychains'
+      },
+      {
+        id: 'cap-printing',
+        name: 'Cap Printing',
+        category: 'Apparel',
+        price: '₹399',
+        image: 'https://picsum.photos/seed/caps/500/300',
+        description: 'Branded caps with embroidery or print'
+      },
+      {
+        id: 'tote-bags',
+        name: 'Custom Tote Bags',
+        category: 'Bags',
+        price: '₹599',
+        image: 'https://picsum.photos/seed/totebags/500/300',
+        description: 'Eco-friendly printed tote bags for events and branding'
       }
     ]
   }

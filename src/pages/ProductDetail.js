@@ -66,6 +66,87 @@ export class ProductDetail {
         description: 'Large format banner printing for events, exhibitions, and outdoor displays.',
         features: ['Weather Resistant', 'Large Sizes', 'Durable Material', 'Eyelets Included'],
         sizes: ['3x6ft', '4x8ft', '6x12ft', 'Custom']
+      },
+      // New items
+      'business-cards': {
+        id: 'business-cards',
+        name: 'Business Cards',
+        category: 'Stationery',
+        price: '₹249',
+        image: 'https://picsum.photos/seed/businesscards/800/500',
+        description: 'Premium matte or glossy visiting cards with custom designs and finishes.',
+        features: ['Matte/Glossy', 'Rounded Corners', 'Spot UV', 'Custom Design'],
+        sizes: ['3.5x2 in', 'Custom']
+      },
+      'brochure-printing': {
+        id: 'brochure-printing',
+        name: 'Brochure Printing',
+        category: 'Marketing',
+        price: '₹699',
+        image: 'https://picsum.photos/seed/brochures/800/500',
+        description: 'Tri-fold and bi-fold brochures with high-quality paper and vibrant colors.',
+        features: ['Tri-fold/Bi-fold', 'Premium Paper', 'Full Color', 'Custom Sizes'],
+        sizes: ['A5', 'A4', 'Letter', 'Custom']
+      },
+      'sticker-printing': {
+        id: 'sticker-printing',
+        name: 'Sticker Printing',
+        category: 'Stickers',
+        price: '₹199',
+        image: 'https://picsum.photos/seed/stickers/800/500',
+        description: 'Custom vinyl stickers, labels, and decals for branding and packaging.',
+        features: ['Waterproof', 'Die-Cut', 'Matte/Glossy', 'Custom Shapes'],
+        sizes: ['Small', 'Medium', 'Large', 'Custom']
+      },
+      'id-card-printing': {
+        id: 'id-card-printing',
+        name: 'ID Card Printing',
+        category: 'Identity',
+        price: '₹349',
+        image: 'https://picsum.photos/seed/idcards/800/500',
+        description: 'PVC ID cards with lanyards and custom branding for schools and offices.',
+        features: ['PVC Material', 'Lanyard', 'QR/Barcode', 'Photo & Logo'],
+        sizes: ['Standard', 'Custom']
+      },
+      'diaries-notebooks': {
+        id: 'diaries-notebooks',
+        name: 'Diaries & Notebooks',
+        category: 'Stationery',
+        price: '₹499',
+        image: 'https://picsum.photos/seed/diaries/800/500',
+        description: 'Branded diaries and notebooks ideal for corporate gifting and events.',
+        features: ['Custom Branding', 'Premium Paper', 'Elastic Closure', 'Bookmark'],
+        sizes: ['A5', 'A4', 'Custom']
+      },
+      'keychain-printing': {
+        id: 'keychain-printing',
+        name: 'Keychain Printing',
+        category: 'Accessories',
+        price: '₹149',
+        image: 'https://picsum.photos/seed/keychains/800/500',
+        description: 'Custom photo and logo keychains in acrylic, metal, and leather finishes.',
+        features: ['Photo/Logo', 'Acrylic/Metal', 'Durable', 'Gift Ready'],
+        sizes: ['Standard', 'Custom']
+      },
+      'cap-printing': {
+        id: 'cap-printing',
+        name: 'Cap Printing',
+        category: 'Apparel',
+        price: '₹399',
+        image: 'https://picsum.photos/seed/caps/800/500',
+        description: 'Branded caps with embroidery or print for teams and promotions.',
+        features: ['Embroidery/Print', 'Adjustable', 'Multiple Colors', 'Durable'],
+        sizes: ['One Size']
+      },
+      'tote-bags': {
+        id: 'tote-bags',
+        name: 'Custom Tote Bags',
+        category: 'Bags',
+        price: '₹599',
+        image: 'https://picsum.photos/seed/totebags/800/500',
+        description: 'Eco-friendly printed tote bags perfect for events and brand promos.',
+        features: ['Eco-friendly', 'Durable', 'Large Print Area', 'Multiple Colors'],
+        sizes: ['Standard', 'Large', 'Custom']
       }
     }
   }
