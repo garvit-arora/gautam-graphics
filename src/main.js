@@ -1,3 +1,4 @@
+// Import CSS - Vite handles this automatically
 import './styles/index.css'
 import { Router } from './utils/router.js'
 import { Auth } from './utils/auth.js'
