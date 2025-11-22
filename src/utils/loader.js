@@ -7,19 +7,19 @@ export function initLoader() {
   const ink = loader.querySelector('.ink')
   const text = loader.querySelector('.loader-text')
 
-  // Animate printer
+  // Subtle floating printer
   gsap.to(printer, {
-    y: -10,
-    duration: 0.5,
+    y: -8,
+    duration: 0.8,
     yoyo: true,
     repeat: -1,
-    ease: 'power2.inOut'
+    ease: 'sine.inOut'
   })
 
-  // Animate paper sliding
+  // Paper sliding loop
   gsap.to(paper, {
-    y: -30,
-    duration: 1,
+    y: -28,
+    duration: 1.2,
     yoyo: true,
     repeat: -1,
     ease: 'power1.inOut'
@@ -27,8 +27,8 @@ export function initLoader() {
 
   // Animate ink flow
   gsap.to(ink, {
-    scaleY: 1.2,
-    duration: 0.8,
+    scaleY: 1.15,
+    duration: 1,
     yoyo: true,
     repeat: -1,
     ease: 'power2.inOut'
@@ -41,6 +41,13 @@ export function initLoader() {
     yoyo: true,
     repeat: -1,
     ease: 'power1.inOut'
+  })
+
+  // Entry shimmer on loader container
+  gsap.from(loader, {
+    opacity: 0,
+    duration: 0.4,
+    ease: 'power2.out'
   })
 }
 

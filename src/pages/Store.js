@@ -2,6 +2,8 @@ import { Navigation } from '../components/Navigation.js'
 import { Auth } from '../utils/auth.js'
 import { Router } from '../utils/router.js'
 import { gsap } from 'gsap'
+import confetti from 'canvas-confetti'
+import { addHoverTiltToCards } from '../utils/animations.js'
 
 export class Store {
   constructor() {
@@ -194,16 +196,19 @@ export class Store {
     // Update auth UI
     Auth.updateUI()
     
-    // Simple fade in for products
+    // Animated entrance for products
     const productCards = document.querySelectorAll('.product-card')
     productCards.forEach((card, index) => {
       card.style.opacity = '1'
       card.style.visibility = 'visible'
       gsap.fromTo(card,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.4, delay: index * 0.05, ease: 'power2.out' }
+        { opacity: 0, y: 24, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, delay: index * 0.06, ease: 'power3.out' }
       )
     })
+
+    // Add hover tilt effect
+    addHoverTiltToCards('.product-card')
   }
 
   addToCart(productId) {
@@ -240,6 +245,13 @@ export class Store {
         btn.style.background = ''
       }, 2000)
     }
+
+    // Confetti celebration
+    confetti({
+      particleCount: 80,
+      spread: 60,
+      origin: { y: 0.6 }
+    })
   }
 }
 

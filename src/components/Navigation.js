@@ -49,13 +49,26 @@ export class Navigation {
       })
     }
 
-    // Mobile menu toggle
-    const mobileToggle = nav.querySelector('.mobile-menu-toggle')
-    const navLinks = nav.querySelector('.nav-links')
-    mobileToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active')
-      mobileToggle.classList.toggle('active')
-    })
+    // Mobile menu toggle with animation
+    const toggle = nav.querySelector('.mobile-menu-toggle')
+    const links = nav.querySelector('.nav-links')
+    if (toggle && links) {
+      toggle.addEventListener('click', () => {
+        const active = links.classList.toggle('active')
+        const bars = toggle.querySelectorAll('span')
+        if (active) {
+          gsap.to(links, { left: 0, duration: 0.3, ease: 'power2.out' })
+          gsap.to(bars[0], { rotate: 45, y: 6, duration: 0.2 })
+          gsap.to(bars[1], { opacity: 0, duration: 0.2 })
+          gsap.to(bars[2], { rotate: -45, y: -6, duration: 0.2 })
+        } else {
+          gsap.to(links, { left: '-100%', duration: 0.3, ease: 'power2.in' })
+          gsap.to(bars[0], { rotate: 0, y: 0, duration: 0.2 })
+          gsap.to(bars[1], { opacity: 1, duration: 0.2 })
+          gsap.to(bars[2], { rotate: 0, y: 0, duration: 0.2 })
+        }
+      })
+    }
 
     this.nav = nav
     return nav

@@ -37,6 +37,21 @@ export class Router {
   static async handleRoute() {
     const path = window.location.pathname
     const app = document.getElementById('app')
+    // Ensure route transition overlay exists
+    let overlay = document.getElementById('route-transition-overlay')
+    if (!overlay) {
+      overlay = document.createElement('div')
+      overlay.id = 'route-transition-overlay'
+      overlay.style.cssText = `
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2000;
+        background: radial-gradient(1200px 600px at 50% 50%, rgba(129,140,248,0.2), rgba(167,139,250,0.15) 30%, transparent 70%);
+        opacity: 0;
+      `
+      document.body.appendChild(overlay)
+    }
     
     if (!app) {
       console.error('App element not found')
@@ -79,6 +94,11 @@ export class Router {
       if (routeHandler) {
         const PageComponent = await routeHandler()
         
+        // Route transition overlay animation
+        if (!isInitialLoad && overlay) {
+          gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' })
+        }
+
         // Hide loader immediately
         if (loader) {
           loader.style.display = 'none'
@@ -88,6 +108,10 @@ export class Router {
         }
         
         // Clear app
+        if (app.children.length) {
+          // Animate old content out
+          await gsap.to(app, { opacity: 0, y: 10, duration: 0.15, ease: 'power2.in' })
+        }
         app.innerHTML = ''
         
         // Ensure app is visible before adding content
@@ -107,17 +131,22 @@ export class Router {
           pageElement.style.visibility = 'visible'
         }
         
-        // Small fade in animation
+        // Elevated entrance animation
         setTimeout(() => {
           if (app) {
-            gsap.fromTo(app, 
-              { opacity: 0.9 },
-              { 
+            gsap.fromTo(app,
+              { opacity: 0, y: 8, filter: 'blur(3px)' },
+              {
                 opacity: 1,
-                duration: 0.2,
-                ease: 'power2.out'
+                y: 0,
+                filter: 'blur(0px)',
+                duration: 0.35,
+                ease: 'power3.out'
               }
             )
+          }
+          if (overlay) {
+            gsap.to(overlay, { opacity: 0, duration: 0.3, ease: 'power2.out', delay: 0.05 })
           }
         }, 10)
         

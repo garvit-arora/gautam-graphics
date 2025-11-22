@@ -4,6 +4,7 @@ import { Router } from './utils/router.js'
 import { Auth } from './utils/auth.js'
 import { initLoader } from './utils/loader.js'
 import { BackgroundEffects } from './components/BackgroundEffects.js'
+import { initScrollReveal } from './utils/animations.js'
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,6 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Background effects error:', bgError)
       }
     }, 500)
+
+    // Initialize scroll reveal animations
+    setTimeout(() => {
+      try {
+        initScrollReveal()
+      } catch (animError) {
+        console.warn('Scroll reveal init error:', animError)
+      }
+    }, 600)
     
     // Fallback: Hide loader after 2 seconds if still showing
     setTimeout(() => {

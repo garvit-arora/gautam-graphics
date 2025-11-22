@@ -250,6 +250,21 @@ export class ProductDetail {
       delay: 0.2,
       ease: 'power2.out'
     })
+
+    // Hover zoom/parallax on main image
+    const imgWrapper = document.querySelector('.product-image-wrapper')
+    const img = document.querySelector('.product-detail-image')
+    if (imgWrapper && img) {
+      imgWrapper.addEventListener('mousemove', (e) => {
+        const rect = imgWrapper.getBoundingClientRect()
+        const x = (e.clientX - rect.left) / rect.width
+        const y = (e.clientY - rect.top) / rect.height
+        gsap.to(img, { scale: 1.04, x: (x - 0.5) * 20, y: (y - 0.5) * 20, duration: 0.2 })
+      })
+      imgWrapper.addEventListener('mouseleave', () => {
+        gsap.to(img, { scale: 1, x: 0, y: 0, duration: 0.3, ease: 'power2.out' })
+      })
+    }
   }
 }
 
