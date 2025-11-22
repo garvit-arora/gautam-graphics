@@ -298,6 +298,8 @@ export class Store {
     }
 
     localStorage.setItem('gautam_graphics_cart', JSON.stringify(cart))
+    // Notify other UI parts
+    document.dispatchEvent(new CustomEvent('cart:updated'))
     
     // Show success animation
     const btn = document.querySelector(`[data-product-id="${productId}"].btn-add-to-cart`)
@@ -317,6 +319,14 @@ export class Store {
       spread: 60,
       origin: { y: 0.6 }
     })
+    // Trigger floating cart pop
+    const floatBtn = document.getElementById('floating-cart')
+    if (floatBtn) {
+      floatBtn.classList.remove('pop')
+      void floatBtn.offsetWidth
+      floatBtn.classList.add('pop')
+      setTimeout(() => floatBtn.classList.remove('pop'), 600)
+    }
   }
 }
 

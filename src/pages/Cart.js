@@ -167,6 +167,7 @@ export class Cart {
     }
 
     localStorage.setItem('gautam_graphics_cart', JSON.stringify(this.cart))
+    document.dispatchEvent(new CustomEvent('cart:updated'))
     Router.navigate('/cart')
   }
 

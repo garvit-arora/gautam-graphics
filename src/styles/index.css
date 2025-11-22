@@ -1677,7 +1677,7 @@ input:focus, textarea:focus, select:focus {
     top: 70px;
     left: -100%;
     width: 100%;
-    background: white;
+    background: var(--bg-card);
     flex-direction: column;
     padding: 2rem;
     box-shadow: var(--shadow);
@@ -1700,6 +1700,48 @@ input:focus, textarea:focus, select:focus {
     width: 100%;
     max-height: 300px;
   }
+}
+
+/* Floating cart badge */
+.floating-cart {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  z-index: 1100;
+}
+.floating-cart-emoji {
+  font-size: 20px;
+}
+.floating-cart-count {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.floating-cart.pop {
+  animation: cart-pop 0.6s ease;
+}
+@keyframes cart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 @media (max-width: 768px) {

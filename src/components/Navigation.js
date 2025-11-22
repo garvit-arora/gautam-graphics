@@ -1,6 +1,7 @@
 import { Auth } from '../utils/auth.js'
 import { Router } from '../utils/router.js'
 import { gsap } from 'gsap'
+import logo from "../../src/logo2.png"
 
 export class Navigation {
   constructor() {
@@ -14,8 +15,9 @@ export class Navigation {
       <div class="nav-container">
         <div class="nav-brand">
           <a href="/" data-link class="brand-link">
-            <span class="brand-icon">🎨</span>
-            <span class="brand-text">Gautam Graphics</span>
+            <span class="brand-icon"><img src="${logo}" alt="Gautam Graphics Logo" style="width: 40px; height: 40px;"></span>
+              
+            
           </a>
         </div>
         <ul class="nav-links">
