@@ -86,7 +86,7 @@ export class Location {
                 <div class="marker-pulse"></div>
               </div>
               <p class="map-note">Sector 16, Rohini, Delhi</p>
-              <a href="https://www.google.com/maps/search/Sector+16,+Rohini,+Delhi" 
+              <a href="https://maps.app.goo.gl/GF24DVsik4T8qZGs8" 
                  target="_blank" 
                  class="btn-primary"
                  rel="noopener noreferrer">
