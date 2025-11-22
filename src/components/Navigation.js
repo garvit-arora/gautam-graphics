@@ -1,7 +1,7 @@
 import { Auth } from '../utils/auth.js'
 import { Router } from '../utils/router.js'
 import { gsap } from 'gsap'
-import logo from "../../src/logo2.png"
+import logo from "../logo2.png"
 
 export class Navigation {
   constructor() {
@@ -90,6 +90,49 @@ export class Navigation {
     setTimeout(() => {
       Auth.updateUI()
     }, 100)
+
+    // Floating cart badge (bottom-right)
+    if (!document.getElementById('floating-cart')) {
+      const floating = document.createElement('button')
+      floating.id = 'floating-cart'
+      floating.className = 'floating-cart'
+      floating.setAttribute('aria-label', 'Open cart')
+      floating.innerHTML = `
+        <span class="floating-cart-emoji">🛒</span>
+        <span class="floating-cart-count" id="floating-cart-count">0</span>
+      `
+      document.body.appendChild(floating)
+      floating.addEventListener('click', () => {
+        Router.navigate('/cart')
+      })
+    }
+
+    const updateCount = () => {
+      try {
+        const cart = JSON.parse(localStorage.getItem('gautam_graphics_cart') || '[]')
+        const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+        const badge = document.getElementById('floating-cart-count')
+        const btn = document.getElementById('floating-cart')
+        if (badge && btn) {
+          badge.textContent = String(count)
+          btn.style.display = count > 0 ? 'flex' : 'none'
+        }
+      } catch (_) {}
+    }
+
+    // Initial update and event listener
+    updateCount()
+    document.addEventListener('cart:updated', () => {
+      updateCount()
+      const btn = document.getElementById('floating-cart')
+      if (btn) {
+        btn.classList.remove('pop')
+        // trigger pop animation
+        void btn.offsetWidth
+        btn.classList.add('pop')
+        setTimeout(() => btn.classList.remove('pop'), 600)
+      }
+    })
   }
 }
 
