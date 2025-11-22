@@ -32,7 +32,7 @@ export class ProductDetail {
         name: 'Wedding Invitation Cards',
         category: 'Wedding Cards',
         price: '₹899',
-        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800',
+        image: 'https://png.pngtree.com/png-clipart/20241119/original/pngtree-wedding-invitation-card-with-delicate-watercolor-flowers-png-image_17243754.png',
         description: 'Elegant wedding cards with premium finishes. Make your special day memorable.',
         features: ['Premium Paper', 'Multiple Finishes', 'Custom Design', 'Envelope Included'],
         sizes: ['5x7', '6x8', 'Custom']
@@ -42,7 +42,7 @@ export class ProductDetail {
         name: 'Business Letterheads',
         category: 'Letterheads',
         price: '₹499',
-        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800',
+        image: 'https://marketplace.canva.com/EAGKe1OTEoo/1/0/1131w/canva-dark-blue-formal-minimalist-company-letterhead-zkrD54bJLLk.jpg',
         description: 'Professional letterheads for your business. Premium quality paper with custom branding.',
         features: ['Premium Paper', 'Custom Logo', 'Multiple Colors', 'Bulk Printing'],
         sizes: ['A4', 'Letter', 'Custom']
@@ -52,7 +52,7 @@ export class ProductDetail {
         name: 'Poster Printing',
         category: 'Posters',
         price: '₹399',
-        image: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?w=800',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIcmPkl2rKQ2ycSfMQC2o3r8FOt3BhiLnFcQ&s',
         description: 'High-quality poster printing services for events, promotions, and displays.',
         features: ['High Resolution', 'Multiple Sizes', 'UV Resistant', 'Fast Delivery'],
         sizes: ['A3', 'A2', 'A1', 'Custom']
@@ -62,7 +62,7 @@ export class ProductDetail {
         name: 'Banner Printing',
         category: 'Banners',
         price: '₹1299',
-        image: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=800',
+        image: 'https://www.colorjetgroup.com/uploads/products/-1714550814-81.png',
         description: 'Large format banner printing for events, exhibitions, and outdoor displays.',
         features: ['Weather Resistant', 'Large Sizes', 'Durable Material', 'Eyelets Included'],
         sizes: ['3x6ft', '4x8ft', '6x12ft', 'Custom']
@@ -73,7 +73,7 @@ export class ProductDetail {
         name: 'Business Cards',
         category: 'Stationery',
         price: '₹249',
-        image: 'https://picsum.photos/seed/businesscards/800/500',
+        image: 'https://files.printo.in/site/20230523_151926980087_a63a61_Sandwich-business-card.jpg',
         description: 'Premium matte or glossy visiting cards with custom designs and finishes.',
         features: ['Matte/Glossy', 'Rounded Corners', 'Spot UV', 'Custom Design'],
         sizes: ['3.5x2 in', 'Custom']
@@ -83,7 +83,7 @@ export class ProductDetail {
         name: 'Brochure Printing',
         category: 'Marketing',
         price: '₹699',
-        image: 'https://picsum.photos/seed/brochures/800/500',
+        image: 'https://dhrupal.mo.cloudinary.net/images/contentimages/images/brochure_product_info.png',
         description: 'Tri-fold and bi-fold brochures with high-quality paper and vibrant colors.',
         features: ['Tri-fold/Bi-fold', 'Premium Paper', 'Full Color', 'Custom Sizes'],
         sizes: ['A5', 'A4', 'Letter', 'Custom']
@@ -93,7 +93,7 @@ export class ProductDetail {
         name: 'Sticker Printing',
         category: 'Stickers',
         price: '₹199',
-        image: 'https://picsum.photos/seed/stickers/800/500',
+        image: 'https://www.printonweb.in/images/paper/sticker4.webp',
         description: 'Custom vinyl stickers, labels, and decals for branding and packaging.',
         features: ['Waterproof', 'Die-Cut', 'Matte/Glossy', 'Custom Shapes'],
         sizes: ['Small', 'Medium', 'Large', 'Custom']
@@ -103,7 +103,7 @@ export class ProductDetail {
         name: 'ID Card Printing',
         category: 'Identity',
         price: '₹349',
-        image: 'https://picsum.photos/seed/idcards/800/500',
+        image: 'https://printingstudio.in/cdn/shop/files/9909167_4304537.jpg?v=1709816139&width=1946',
         description: 'PVC ID cards with lanyards and custom branding for schools and offices.',
         features: ['PVC Material', 'Lanyard', 'QR/Barcode', 'Photo & Logo'],
         sizes: ['Standard', 'Custom']
@@ -113,7 +113,7 @@ export class ProductDetail {
         name: 'Diaries & Notebooks',
         category: 'Stationery',
         price: '₹499',
-        image: 'https://picsum.photos/seed/diaries/800/500',
+        image: 'https://www.arcprint.in/category/wp-content/uploads/2023/11/Diary_Brown_Image01.jpg',
         description: 'Branded diaries and notebooks ideal for corporate gifting and events.',
         features: ['Custom Branding', 'Premium Paper', 'Elastic Closure', 'Bookmark'],
         sizes: ['A5', 'A4', 'Custom']
@@ -123,7 +123,7 @@ export class ProductDetail {
         name: 'Keychain Printing',
         category: 'Accessories',
         price: '₹149',
-        image: 'https://picsum.photos/seed/keychains/800/500',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyHJZ381fkUUy9KhbpMYGXVM14VnMWtnu7pw&s',
         description: 'Custom photo and logo keychains in acrylic, metal, and leather finishes.',
         features: ['Photo/Logo', 'Acrylic/Metal', 'Durable', 'Gift Ready'],
         sizes: ['Standard', 'Custom']
@@ -133,7 +133,7 @@ export class ProductDetail {
         name: 'Cap Printing',
         category: 'Apparel',
         price: '₹399',
-        image: 'https://picsum.photos/seed/caps/800/500',
+        image: 'https://printingstudio.in/cdn/shop/files/85_7a484913-7f5c-4949-922d-a6bc2bc660f9.jpg?v=1711526260&width=1920',
         description: 'Branded caps with embroidery or print for teams and promotions.',
         features: ['Embroidery/Print', 'Adjustable', 'Multiple Colors', 'Durable'],
         sizes: ['One Size']
@@ -143,7 +143,7 @@ export class ProductDetail {
         name: 'Custom Tote Bags',
         category: 'Bags',
         price: '₹599',
-        image: 'https://picsum.photos/seed/totebags/800/500',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSrdmBk2H7LdlqLZFNdLoXL1Zr9sSdTLgNTg&s',
         description: 'Eco-friendly printed tote bags perfect for events and brand promos.',
         features: ['Eco-friendly', 'Durable', 'Large Print Area', 'Multiple Colors'],
         sizes: ['Standard', 'Large', 'Custom']
