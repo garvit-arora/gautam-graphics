@@ -216,9 +216,6 @@ export class ProductDetail {
                   <button class="btn-primary btn-large" id="customize-btn">
                     <span>🎨</span> Customize Design
                   </button>
-                  <button class="btn-secondary btn-large" id="enquiry-btn">
-                    <span>📧</span> Send Enquiry
-                  </button>
                 `
                 : `
                   <a href="/login" class="btn-primary btn-large" data-link>
@@ -229,37 +226,7 @@ export class ProductDetail {
             </div>
           </div>
         </div>
-
-        <div class="enquiry-form-modal" id="enquiry-modal">
-          <div class="modal-overlay"></div>
-          <div class="modal-content">
-            <button class="modal-close" id="close-modal">&times;</button>
-            <h2>Send Enquiry</h2>
-            <form id="enquiry-form">
-              <div class="form-group">
-                <label for="enquiry-name">Name</label>
-                <input type="text" id="enquiry-name" name="name" required>
-              </div>
-              <div class="form-group">
-                <label for="enquiry-email">Email</label>
-                <input type="email" id="enquiry-email" name="email" required>
-              </div>
-              <div class="form-group">
-                <label for="enquiry-phone">Phone</label>
-                <input type="tel" id="enquiry-phone" name="phone" required>
-              </div>
-              <div class="form-group">
-                <label for="enquiry-quantity">Quantity</label>
-                <input type="number" id="enquiry-quantity" name="quantity" min="1" required>
-              </div>
-              <div class="form-group">
-                <label for="enquiry-message">Message</label>
-                <textarea id="enquiry-message" name="message" rows="4" placeholder="Any special requirements?"></textarea>
-              </div>
-              <button type="submit" class="btn-primary btn-full">Send Enquiry</button>
-            </form>
-          </div>
-        </div>
+        
       </div>
     `
 
@@ -271,37 +238,7 @@ export class ProductDetail {
       })
     }
 
-    const enquiryBtn = main.querySelector('#enquiry-btn')
-    const enquiryModal = main.querySelector('#enquiry-modal')
-    const closeModal = main.querySelector('#close-modal')
-    
-    if (enquiryBtn) {
-      enquiryBtn.addEventListener('click', () => {
-        enquiryModal.classList.add('active')
-        gsap.from('.modal-content', {
-          scale: 0.8,
-          opacity: 0,
-          duration: 0.3,
-          ease: 'back.out(1.7)'
-        })
-      })
-    }
-
-    closeModal.addEventListener('click', () => {
-      enquiryModal.classList.remove('active')
-    })
-
-    main.querySelector('.modal-overlay').addEventListener('click', () => {
-      enquiryModal.classList.remove('active')
-    })
-
-    const enquiryForm = main.querySelector('#enquiry-form')
-    enquiryForm.addEventListener('submit', (e) => {
-      e.preventDefault()
-      alert('Enquiry submitted successfully! We will contact you soon.')
-      enquiryModal.classList.remove('active')
-      enquiryForm.reset()
-    })
+    // Enquiry button and modal removed per request
 
     // Size selector
     main.querySelectorAll('.size-option').forEach(btn => {

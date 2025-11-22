@@ -2,11 +2,14 @@ import { Navigation } from '../components/Navigation.js'
 import { Auth } from '../utils/auth.js'
 import { Router } from '../utils/router.js'
 import { gsap } from 'gsap'
+import * as fabric from 'fabric'
+import { templates } from '../utils/editorTemplates.js'
 
 export class DesignEditor {
   constructor() {
     this.canvas = null
     this.ctx = null
+    this.fcanvas = null
     this.selectedTool = 'select'
     this.elements = []
     this.selectedElement = null
@@ -21,6 +24,8 @@ export class DesignEditor {
     this.drawWidth = 3
     this.history = []
     this.historyIndex = -1
+    this.undoStack = []
+    this.redoStack = []
   }
 
   render() {
@@ -162,7 +167,21 @@ export class DesignEditor {
 
   onMount() {
     this.canvas = document.getElementById('design-canvas')
-    this.ctx = this.canvas.getContext('2d')
+    this.ctx = null
+    this.fcanvas = new fabric.Canvas('design-canvas', {
+      backgroundColor: '#ffffff',
+      preserveObjectStacking: true,
+      selection: true
+    })
+    this.fcanvas.isDrawingMode = false
+    this.fcanvas.freeDrawingBrush = new fabric.PencilBrush(this.fcanvas)
+    this.fcanvas.freeDrawingBrush.color = this.drawColor
+    this.fcanvas.freeDrawingBrush.width = this.drawWidth
+
+    this.fcanvas.on('object:added', () => this.captureState())
+    this.fcanvas.on('object:modified', () => this.captureState())
+    this.fcanvas.on('object:removed', () => this.captureState())
+
     this.setupCanvas()
     this.setupEventListeners()
     this.loadTemplate(this.productType)
@@ -184,50 +203,77 @@ export class DesignEditor {
   }
 
   setupCanvas() {
-    // Set canvas background
-    this.ctx.fillStyle = '#ffffff'
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-
-    // Draw product template outline
+    // Initialize guideline area for current product
     this.drawProductTemplate()
-    
-    // Initialize history
-    this.saveState()
+    this.captureState()
   }
 
   drawProductTemplate() {
-    this.ctx.strokeStyle = '#e0e0e0'
-    this.ctx.lineWidth = 2
-    this.ctx.setLineDash([5, 5])
+    // Remove existing guideline shapes
+    const toRemove = []
+    this.fcanvas.getObjects().forEach(obj => {
+      if (obj.metaGuide) toRemove.push(obj)
+    })
+    toRemove.forEach(obj => this.fcanvas.remove(obj))
 
-    switch (this.productType) {
-      case 'mug':
-        // Mug shape
-        this.ctx.beginPath()
-        this.ctx.arc(400, 300, 150, 0, Math.PI * 2)
-        this.ctx.stroke()
-        break
-      case 'tshirt':
-        // T-shirt shape
-        this.ctx.beginPath()
-        this.ctx.rect(200, 100, 400, 400)
-        this.ctx.stroke()
-        break
-      case 'card':
-        // Card shape
-        this.ctx.beginPath()
-        this.ctx.rect(150, 50, 500, 500)
-        this.ctx.stroke()
-        break
-      case 'letterhead':
-        // Letterhead shape
-        this.ctx.beginPath()
-        this.ctx.rect(50, 50, 700, 500)
-        this.ctx.stroke()
-        break
+    // Add guideline depending on product
+    if (this.productType === 'mug') {
+      const guide = new fabric.Circle({
+        left: 400 - 150,
+        top: 300 - 150,
+        radius: 150,
+        fill: 'transparent',
+        stroke: '#e0e0e0',
+        strokeDashArray: [5, 5],
+        selectable: false,
+        evented: false
+      })
+      guide.metaGuide = true
+      this.fcanvas.add(guide)
+    } else if (this.productType === 'tshirt') {
+      const guide = new fabric.Rect({
+        left: 200,
+        top: 100,
+        width: 400,
+        height: 400,
+        fill: 'transparent',
+        stroke: '#e0e0e0',
+        strokeDashArray: [5, 5],
+        selectable: false,
+        evented: false
+      })
+      guide.metaGuide = true
+      this.fcanvas.add(guide)
+    } else if (this.productType === 'card') {
+      const guide = new fabric.Rect({
+        left: 150,
+        top: 50,
+        width: 500,
+        height: 500,
+        fill: 'transparent',
+        stroke: '#e0e0e0',
+        strokeDashArray: [5, 5],
+        selectable: false,
+        evented: false
+      })
+      guide.metaGuide = true
+      this.fcanvas.add(guide)
+    } else if (this.productType === 'letterhead') {
+      const guide = new fabric.Rect({
+        left: 50,
+        top: 50,
+        width: 700,
+        height: 500,
+        fill: 'transparent',
+        stroke: '#e0e0e0',
+        strokeDashArray: [5, 5],
+        selectable: false,
+        evented: false
+      })
+      guide.metaGuide = true
+      this.fcanvas.add(guide)
     }
-
-    this.ctx.setLineDash([])
+    this.fcanvas.requestRenderAll()
   }
 
   setupEventListeners() {
@@ -242,44 +288,31 @@ export class DesignEditor {
     // Text tool
     document.getElementById('text-input').addEventListener('input', (e) => {
       if (this.selectedTool === 'text') {
-        this.addText(e.target.value)
+        const active = this.fcanvas.getActiveObject()
+        if (active && active.type === 'textbox') {
+          active.text = e.target.value
+          this.fcanvas.requestRenderAll()
+        }
       }
     })
 
-    // Canvas click
-    this.canvas.addEventListener('click', (e) => {
-      this.handleCanvasClick(e)
+    // Fabric mouse down to place text when tool is text
+    this.fcanvas.on('mouse:down', (opt) => {
+      if (this.selectedTool !== 'text') return
+      const text = document.getElementById('text-input').value || 'Sample Text'
+      const pointer = this.fcanvas.getPointer(opt.e)
+      this.addTextElement(pointer.x, pointer.y, text)
     })
 
-    // Canvas drag
-    this.canvas.addEventListener('mousedown', (e) => {
-      if (this.selectedTool === 'draw') {
-        this.startDrawing(e)
-      } else {
-        this.handleMouseDown(e)
-      }
+    // Drawing brush controls
+    document.getElementById('draw-color').addEventListener('input', (e) => {
+      this.drawColor = e.target.value
+      if (this.fcanvas.freeDrawingBrush) this.fcanvas.freeDrawingBrush.color = this.drawColor
     })
-
-    this.canvas.addEventListener('mousemove', (e) => {
-      if (this.selectedTool === 'draw' && this.isDrawing) {
-        this.draw(e)
-      } else {
-        this.handleMouseMove(e)
-      }
-    })
-
-    this.canvas.addEventListener('mouseup', () => {
-      if (this.selectedTool === 'draw') {
-        this.stopDrawing()
-      } else {
-        this.handleMouseUp()
-      }
-    })
-
-    this.canvas.addEventListener('mouseleave', () => {
-      if (this.selectedTool === 'draw') {
-        this.stopDrawing()
-      }
+    document.getElementById('draw-width').addEventListener('input', (e) => {
+      this.drawWidth = parseInt(e.target.value)
+      document.getElementById('draw-size-display').textContent = e.target.value
+      if (this.fcanvas.freeDrawingBrush) this.fcanvas.freeDrawingBrush.width = this.drawWidth
     })
 
     // Shape buttons
@@ -306,9 +339,12 @@ export class DesignEditor {
     // Clear button
     document.getElementById('clear-btn').addEventListener('click', () => {
       if (confirm('Clear all elements?')) {
-        this.elements = []
-        this.saveState()
-        this.redraw()
+        const removals = []
+        this.fcanvas.getObjects().forEach(obj => {
+          if (!obj.metaGuide) removals.push(obj)
+        })
+        removals.forEach(obj => this.fcanvas.remove(obj))
+        this.captureState()
       }
     })
 
@@ -341,19 +377,14 @@ export class DesignEditor {
       this.zoom(0.9)
     })
 
-    // Text size slider
+    // Text size slider updates active textbox
     document.getElementById('text-size').addEventListener('input', (e) => {
       document.getElementById('size-display').textContent = e.target.value
-    })
-
-    // Draw color and width
-    document.getElementById('draw-color').addEventListener('input', (e) => {
-      this.drawColor = e.target.value
-    })
-
-    document.getElementById('draw-width').addEventListener('input', (e) => {
-      this.drawWidth = parseInt(e.target.value)
-      document.getElementById('draw-size-display').textContent = e.target.value
+      const active = this.fcanvas.getActiveObject()
+      if (active && active.type === 'textbox') {
+        active.fontSize = parseInt(e.target.value)
+        this.fcanvas.requestRenderAll()
+      }
     })
   }
 
@@ -372,94 +403,76 @@ export class DesignEditor {
     
     // Update cursor
     if (tool === 'draw') {
+      this.fcanvas.isDrawingMode = true
       this.canvas.style.cursor = 'crosshair'
-    } else if (tool === 'select') {
-      this.canvas.style.cursor = 'default'
     } else {
-      this.canvas.style.cursor = 'pointer'
+      this.fcanvas.isDrawingMode = false
+      this.canvas.style.cursor = tool === 'select' ? 'default' : 'pointer'
     }
   }
 
-  handleCanvasClick(e) {
-    const rect = this.canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    if (this.selectedTool === 'text') {
-      const text = document.getElementById('text-input').value || 'Sample Text'
-      this.addTextElement(x, y, text)
-    }
-  }
+  handleCanvasClick(e) {}
 
   addTextElement(x, y, text) {
     const fontSize = parseInt(document.getElementById('text-size').value)
     const color = document.getElementById('text-color').value
     const font = document.getElementById('text-font').value
-
-    const element = {
-      type: 'text',
-      x,
-      y,
-      text,
+    const textbox = new fabric.Textbox(text, {
+      left: x,
+      top: y,
       fontSize,
-      color,
-      font,
-      id: Date.now()
-    }
-
-    this.elements.push(element)
-    this.saveState()
-    this.redraw()
+      fontFamily: font,
+      fill: color,
+      textAlign: 'left',
+      editable: true
+    })
+    this.fcanvas.add(textbox)
+    this.fcanvas.setActiveObject(textbox)
+    this.fcanvas.requestRenderAll()
   }
 
   addText(text) {
     if (text) {
-      this.addTextElement(400, 300, text)
+      const active = this.fcanvas.getActiveObject()
+      if (active && active.type === 'textbox') {
+        active.text = text
+        this.fcanvas.requestRenderAll()
+      }
     }
   }
 
   addShape(shapeType) {
     const color = document.getElementById('shape-color').value
-    const element = {
-      type: 'shape',
-      shape: shapeType,
-      x: 400,
-      y: 300,
-      width: 100,
-      height: 100,
-      color,
-      id: Date.now()
+    let obj
+    if (shapeType === 'rect') {
+      obj = new fabric.Rect({ left: 380, top: 280, width: 140, height: 100, fill: color, rx: 8, ry: 8 })
+    } else if (shapeType === 'circle') {
+      obj = new fabric.Circle({ left: 380, top: 280, radius: 60, fill: color })
+    } else if (shapeType === 'line') {
+      obj = new fabric.Line([360, 260, 480, 320], { stroke: color, strokeWidth: 5 })
     }
-
-    this.elements.push(element)
-    this.saveState()
-    this.redraw()
+    if (obj) {
+      this.fcanvas.add(obj)
+      this.fcanvas.setActiveObject(obj)
+      this.fcanvas.requestRenderAll()
+    }
   }
 
   handleImageUpload(e) {
     const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const img = new Image()
-        img.onload = () => {
-          const element = {
-            type: 'image',
-            x: 200,
-            y: 200,
-            width: img.width,
-            height: img.height,
-            image: img,
-            id: Date.now()
-          }
-          this.elements.push(element)
-          this.saveState()
-          this.redraw()
-        }
-        img.src = event.target.result
-      }
-      reader.readAsDataURL(file)
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      fabric.Image.fromURL(ev.target.result, (img) => {
+        const maxW = 300
+        const scale = Math.min(1, maxW / img.width)
+        img.set({ left: 200, top: 200, scaleX: scale, scaleY: scale })
+        this.fcanvas.add(img)
+        this.fcanvas.setActiveObject(img)
+        this.fcanvas.requestRenderAll()
+      }, { crossOrigin: 'anonymous' })
     }
+    reader.readAsDataURL(file)
   }
 
   handleMouseDown(e) {
@@ -528,43 +541,36 @@ export class DesignEditor {
     this.isDrawing = false
   }
 
-  saveState() {
-    // Save current state to history
-    this.history = this.history.slice(0, this.historyIndex + 1)
-    this.history.push(JSON.parse(JSON.stringify(this.elements)))
-    this.historyIndex = this.history.length - 1
-    
-    // Limit history size
-    if (this.history.length > 50) {
-      this.history.shift()
-      this.historyIndex--
-    }
+  captureState() {
+    const json = this.fcanvas.toJSON(['metaGuide'])
+    this.undoStack.push(json)
+    this.redoStack = []
+    if (this.undoStack.length > 50) this.undoStack.shift()
   }
 
   undo() {
-    if (this.historyIndex > 0) {
-      this.historyIndex--
-      this.elements = JSON.parse(JSON.stringify(this.history[this.historyIndex]))
-      this.redraw()
+    if (this.undoStack.length > 1) {
+      const current = this.undoStack.pop()
+      this.redoStack.push(current)
+      const prev = this.undoStack[this.undoStack.length - 1]
+      this.fcanvas.loadFromJSON(prev, () => this.fcanvas.requestRenderAll())
     }
   }
 
   redo() {
-    if (this.historyIndex < this.history.length - 1) {
-      this.historyIndex++
-      this.elements = JSON.parse(JSON.stringify(this.history[this.historyIndex]))
-      this.redraw()
+    if (this.redoStack.length > 0) {
+      const next = this.redoStack.pop()
+      this.undoStack.push(next)
+      this.fcanvas.loadFromJSON(next, () => this.fcanvas.requestRenderAll())
     }
   }
 
   zoom(factor) {
-    const currentZoom = parseFloat(document.querySelector('.zoom-level').textContent) / 100
+    const currentZoom = this.fcanvas.getZoom()
     const newZoom = Math.max(0.5, Math.min(2, currentZoom * factor))
+    this.fcanvas.setZoom(newZoom)
     document.querySelector('.zoom-level').textContent = Math.round(newZoom * 100) + '%'
-    
-    const canvasWrapper = document.querySelector('.canvas-wrapper')
-    canvasWrapper.style.transform = `scale(${newZoom})`
-    canvasWrapper.style.transformOrigin = 'center'
+    this.fcanvas.requestRenderAll()
   }
 
   findElementAt(x, y) {
@@ -578,91 +584,50 @@ export class DesignEditor {
     return null
   }
 
-  redraw() {
-    // Clear canvas
-    this.ctx.fillStyle = '#ffffff'
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+  redraw() {}
 
-    // Redraw template
-    this.drawProductTemplate()
+  drawElement(element) {}
 
-    // Draw all elements
-    this.elements.forEach(element => {
-      this.drawElement(element)
-    })
-
-    // Draw selection
-    if (this.selectedElement) {
-      this.drawSelection(this.selectedElement)
-    }
-  }
-
-  drawElement(element) {
-    this.ctx.save()
-
-    switch (element.type) {
-      case 'text':
-        this.ctx.font = `${element.fontSize}px ${element.font}`
-        this.ctx.fillStyle = element.color
-        this.ctx.fillText(element.text, element.x, element.y)
-        break
-
-      case 'shape':
-        this.ctx.fillStyle = element.color
-        if (element.shape === 'rect') {
-          this.ctx.fillRect(element.x, element.y, element.width, element.height)
-        } else if (element.shape === 'circle') {
-          this.ctx.beginPath()
-          this.ctx.arc(element.x + element.width/2, element.y + element.height/2, element.width/2, 0, Math.PI * 2)
-          this.ctx.fill()
-        } else if (element.shape === 'line') {
-          this.ctx.strokeStyle = element.color
-          this.ctx.lineWidth = 5
-          this.ctx.beginPath()
-          this.ctx.moveTo(element.x, element.y)
-          this.ctx.lineTo(element.x + element.width, element.y + element.height)
-          this.ctx.stroke()
-        }
-        break
-
-      case 'image':
-        if (element.image) {
-          this.ctx.drawImage(element.image, element.x, element.y, element.width, element.height)
-        }
-        break
-    }
-
-    this.ctx.restore()
-  }
-
-  drawSelection(element) {
-    this.ctx.strokeStyle = '#0066ff'
-    this.ctx.lineWidth = 2
-    this.ctx.setLineDash([5, 5])
-    const width = element.width || 100
-    const height = element.height || 50
-    this.ctx.strokeRect(element.x - 5, element.y - 5, width + 10, height + 10)
-    this.ctx.setLineDash([])
-  }
+  drawSelection(element) {}
 
   loadTemplate(template) {
     this.productType = template
-    this.elements = []
-    this.redraw()
+    // Clear existing non-guides
+    const removals = []
+    this.fcanvas.getObjects().forEach(obj => { if (!obj.metaGuide) removals.push(obj) })
+    removals.forEach(obj => this.fcanvas.remove(obj))
+    this.drawProductTemplate()
+
+    // Load template objects
+    const defs = templates[template] || []
+    defs.forEach(def => {
+      let obj
+      if (def.type === 'circleArea') {
+        obj = new fabric.Circle({ left: def.left - def.radius, top: def.top - def.radius, radius: def.radius, fill: 'transparent', stroke: def.stroke || '#d8d8d8', strokeDashArray: def.dash || [8,6], selectable: false, evented: false })
+        obj.metaGuide = true
+      } else if (def.type === 'rectArea') {
+        obj = new fabric.Rect({ left: def.left, top: def.top, width: def.width, height: def.height, fill: 'transparent', stroke: def.stroke || '#d8d8d8', strokeDashArray: def.dash || [8,6], selectable: false, evented: false })
+        obj.metaGuide = true
+      } else if (def.type === 'shape' && def.shape === 'rect') {
+        obj = new fabric.Rect({ left: def.left, top: def.top, width: def.width, height: def.height, fill: def.fill || '#cccccc', opacity: def.opacity || 1, rx: def.rx || 0, ry: def.ry || 0 })
+      } else if (def.type === 'textbox') {
+        obj = new fabric.Textbox(def.text || '', { left: def.left, top: def.top, fontSize: def.fontSize || 24, fontFamily: def.fontFamily || 'Verdana', fill: def.fill || '#000', textAlign: def.textAlign || 'center', charSpacing: def.charSpacing || 0 })
+      }
+      if (obj) this.fcanvas.add(obj)
+    })
+    this.fcanvas.requestRenderAll()
+    this.captureState()
   }
 
   saveDesign() {
-    const designData = {
-      productType: this.productType,
-      elements: this.elements,
-      timestamp: Date.now()
-    }
+    const json = this.fcanvas.toJSON(['metaGuide'])
+    const designData = { productType: this.productType, fabric: json, timestamp: Date.now() }
     localStorage.setItem('gautam_graphics_design', JSON.stringify(designData))
     alert('Design saved successfully!')
   }
 
   exportDesign() {
-    const dataURL = this.canvas.toDataURL('image/png')
+    const dataURL = this.fcanvas.toDataURL({ format: 'png', multiplier: 2 })
     const link = document.createElement('a')
     link.download = `gautam-graphics-design-${Date.now()}.png`
     link.href = dataURL

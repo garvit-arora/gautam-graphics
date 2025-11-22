@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "gsap": "^3.13.0",
-    "canvas-confetti": "^1.9.4"
+    "canvas-confetti": "^1.9.4",
+    "fabric": "^6.9.0",
+    "gsap": "^3.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
