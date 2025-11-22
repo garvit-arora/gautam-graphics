@@ -14,12 +14,11 @@ export class Location {
         lat: 28.7041,
         lng: 77.1025
       },
-      phone: '+91-11-XXXX-XXXX',
-      email: 'info@gautamgraphics.com',
+      phone: '+91-9313345071',
+      email: 'printgautamrohini@gmail.com',
       hours: {
-        'Monday - Friday': '9:00 AM - 7:00 PM',
-        'Saturday': '10:00 AM - 6:00 PM',
-        'Sunday': 'Closed'
+        'Monday - Saturday': '9:00 AM - 7:00 PM',
+        'Sunday': '11:00 AM - 6:00 PM'
       }
     }
   }
